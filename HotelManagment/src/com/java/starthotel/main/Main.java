@@ -35,7 +35,7 @@ public class Main {
 	}
 	
 	private static void msgAdminPerfil() {
-		System.out.println("You choose enter as client.");
+		System.out.println("You choose enter as Admin.");
 		System.out.println("Enter your id:");
 	}
 	
@@ -44,29 +44,30 @@ public class Main {
 		System.out.println("Enter your id:");
 	}
 	
-	public static void hotelPickItems() {
-		while(true) {
-			switch (key) {
-			case value: {
-				
-				yield type;
-			}
-			default:
-				throw new IllegalArgumentException("Unexpected value: " + key);
-			}
-		}
+	public static void hotelUser() {
+		msgAdminPerfil();
+		
+//		while(true) {
+//			switch (key) {
+//			case 0: {
+//				
+//			}
+//			default:
+//				throw new IllegalArgumentException("Unexpected value: " + key);
+//			}
+//		}
 	}
 	
 	public static void hotelAdmin() {
+		msgUserPerfil() ;
 		while(true) {
-			switch (key) {
-			case value: {
-				
-				yield type;
-			}
-			default:
-				throw new IllegalArgumentException("Unexpected value: " + key);
-			}
+//			switch (key) {
+//			case 0: {
+//				
+//			}
+//			default:
+//				throw new IllegalArgumentException("Unexpected value: " + key);
+//			}
 		}
 	}
 	
@@ -84,7 +85,7 @@ public class Main {
 			}
 			
 			case 1: {
-				hotelPickItems();
+				hotelUser();
 			}		
 			default:
 				break;

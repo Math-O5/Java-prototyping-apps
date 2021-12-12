@@ -5,7 +5,7 @@ import java.util.List;
 
 
 public interface CartDao {
-	public abstract void addCartItem(long userId, long meuItemId);
-	public abstract List<MenuItem> getAllCartItems(long userId) throws CartEmptyException;
-	public abstract void removeCartItem(long userId, long menuItemId);
+	public abstract void addCartItem(int userId, int meuItemId);
+	public abstract List<MenuItem> getAllCartItems(int userId) throws CartEmptyException;
+	public abstract void removeCartItem(int userId, int menuItemId);
 }

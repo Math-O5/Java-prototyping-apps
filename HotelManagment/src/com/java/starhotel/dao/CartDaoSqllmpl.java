@@ -7,19 +7,19 @@ import com.java.starhotel.model.MenuItem;
 public class CartDaoSqllmpl implements CartDao {
 
 	@Override
-	public void addCartItem(long userId, long meuItemId) {
+	public void addCartItem(int userId, int meuItemId) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public List<MenuItem> getAllCartItems(long userId) throws CartEmptyException {
+	public List<MenuItem> getAllCartItems(int userId) throws CartEmptyException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void removeCartItem(long userId, long menuItemId) {
+	public void removeCartItem(int userId, int menuItemId) {
 		// TODO Auto-generated method stub
 		
 	}

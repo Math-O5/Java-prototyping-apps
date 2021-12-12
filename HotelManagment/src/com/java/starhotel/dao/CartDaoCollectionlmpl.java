@@ -13,11 +13,11 @@ public class CartDaoCollectionlmpl implements CartDao {
 	/**
 	 * This class manages the data related to Cart of all users of star-hotel application.
 	 */
-	private static HashMap<Long, Cart> userCarts = null;
+	private static HashMap<Integer, Cart> userCarts;
 	
 	public void CartdaoCollectionlmpl() {
 		if(userCarts == null)
-			userCarts = new HashMap<Long, Cart>();			
+			userCarts = new HashMap<Integer, Cart>();			
 	}
 	
 	/**
@@ -30,26 +30,37 @@ public class CartDaoCollectionlmpl implements CartDao {
 	}
 	
 	@Override
-	public void addCartItem(long userId, long menuItemId) {
-	
+	public void addCartItem(int userId, int menuItemId) {
 		Cart cart = userCarts.get(userId);			
-		
-		if(cart == null)
-			cart = createCart();
-
-		updateCart(cart, menuItemId);			
-		System.out.println("Item " + menuItemId + " added to the cart user " + userId);		
+		MenuItemDaoCollectionlmpl menuItemDao;
+		try {
+			menuItemDao = new MenuItemDaoCollectionlmpl();
+			if(cart == null)
+				cart = createCart();
+			
+			for(MenuItem menuItem : menuItemDao.getMenuItemListCustomer()) {
+				if(menuItem.getId() == menuItemId) {
+					updateCart(cart, menuItemId);	
+					System.out.println("Item " + menuItemId + " added to the cart user " + userId);		
+					return;
+				}
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+				
+		System.out.println("Item not available");
 	}
 	
 
 	@Override
-	public List<MenuItem> getAllCartItems(long userId) throws CartEmptyException {
+	public List<MenuItem> getAllCartItems(int userId) throws CartEmptyException {
 		Cart cart = userCarts.get(userId);
 		
 		List<MenuItem> menuItemList = cart.getMenuItemList();
 		
 		if(menuItemList.isEmpty())
-			throw new CartEmptyException("Cart is empty");
+			throw new CartEmptyException();
 		
 		updateTotalCartPrice(cart, menuItemList);
 		
@@ -58,7 +69,7 @@ public class CartDaoCollectionlmpl implements CartDao {
 	
 
 	@Override
-	public void removeCartItem(long userId, long menuItemId) {
+	public void removeCartItem(int userId, int menuItemId) {
 		Cart cart = userCarts.get(userId);			
 		
 		if(cart == null)
@@ -71,6 +82,7 @@ public class CartDaoCollectionlmpl implements CartDao {
 			if(itr.next().getId() == menuItemId) {
 				itr.remove();
 				System.out.println("Item " + menuItemId + " removed from the cart user " + userId);		
+				break;
 			}
 		} while(itr.hasNext());
 		
@@ -83,7 +95,7 @@ public class CartDaoCollectionlmpl implements CartDao {
 		cart.setTotal(total);
 	}
 	
-	private void updateCart(Cart cart, long menuItemId) {
+	private void updateCart(Cart cart, int menuItemId) {
 		MenuItem menuItem = null;
 		
 		try {

@@ -9,15 +9,15 @@ import java.util.Objects;
  * @apiNote Menu Item refers to a menu item available for sale in star-hotel.
  */
 public class MenuItem {
-	private long id;
+	private int id;
 	private String nameString;
-	private float price;
+	private double price;
 	private boolean active;
 	private Date dateOfLaunch;
 	private String category;
 	private boolean freeDelivery;
 	
-	public MenuItem(long id, String nameString, float price, boolean active, Date dateOfLaunch, String category,
+	public MenuItem(int id, String nameString, double price, boolean active, Date dateOfLaunch, String category,
 			boolean freeDelivery) {
 		super();
 		this.id = id;
@@ -29,11 +29,11 @@ public class MenuItem {
 		this.freeDelivery = freeDelivery;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -45,11 +45,11 @@ public class MenuItem {
 		this.nameString = nameString;
 	}
 
-	public float getPrice() {
+	public double getPrice() {
 		return price;
 	}
 
-	public void setPrice(float price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 
