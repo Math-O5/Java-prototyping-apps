@@ -78,18 +78,18 @@ public class MenuItemDaosqllmpl implements MenuItemDao {
 	public List<MenuItem> getMenuItemListCustomer() {
 		String sql = "SELECT * FROM menu WHERE active=true AND date <= CURDATE()";
 		List<MenuItem> menuItemList = new ArrayList<MenuItem>();
-		
+//		int id = 1;
 		try {
 			ResultSet result = ConnectionHandler.executeQueryStatement(sql);
 			
 			while(result.next()) {
-				int id = result.getInt(0);
-				String name = result.getString(1);
-				double price = result.getDouble(2);
-				boolean active = result.getBoolean(3);
-				Date date = result.getDate(4);
-				String category = result.getString(5);
-				boolean freeDelivery = result.getBoolean(6);
+				int id = result.getInt(1);
+				String name = result.getString(2);
+				double price = result.getDouble(3);
+				boolean active = result.getBoolean(4);
+				Date date = result.getDate(5);
+				String category = result.getString(6);
+				boolean freeDelivery = result.getBoolean(7);
 				menuItemList.add(new MenuItem(id, name, price, active, date, category, freeDelivery));
 			}
 		} catch (SQLException e) {
@@ -101,7 +101,7 @@ public class MenuItemDaosqllmpl implements MenuItemDao {
 
 	@Override
 	public void modifyMenuItem(MenuItem menuItem) {
-		String sqlStatement = "UPDATE movies " 
+		String sqlStatement = "UPDATE menu " 
 				+ "SET name=?, price=?, active=?, date=?, category=?, freeDelivery=? "
 				+ "WHERE id = ?";
 
@@ -124,12 +124,21 @@ public class MenuItemDaosqllmpl implements MenuItemDao {
 
 	@Override
 	public MenuItem getMenuItem(int menuItemId) {
-		String sql = "SELECT * FROM menu"
-				+ "WHERE id=" + Integer.toString(menuItemId);
+		String sql = "SELECT * FROM menu "
+				+ "WHERE id=" + menuItemId;
 		MenuItem menuItem = null;
 		
 		try {
 			ResultSet result = ConnectionHandler.executeQueryStatement(sql);
+			while(result.next()) {
+				menuItem = new MenuItem(result.getInt(1),
+						result.getString(2),
+						result.getDouble(3),
+						result.getBoolean(4),
+						result.getDate(5),
+						result.getString(6),
+						result.getBoolean(7));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -137,13 +146,5 @@ public class MenuItemDaosqllmpl implements MenuItemDao {
 		return menuItem;
 	}
 	
-//	public static void main(String[] args) {
-//		try {
-//			addMenuItemAdmin("Sandwich", 99, true, DateUtil.convertToDate("15/03/2017"), "Main Course", true);
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
 
 }

@@ -1,3 +1,4 @@
+
 package com.java.starthotel.main;
 
 import java.util.ArrayList;
@@ -7,8 +8,11 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.java.starhotel.dao.CartDaoCollectionlmpl;
+import com.java.starhotel.dao.CartDaoSqllmpl;
 import com.java.starhotel.dao.CartEmptyException;
+import com.java.starhotel.dao.ConnectionHandler;
 import com.java.starhotel.dao.MenuItemDaoCollectionlmpl;
+import com.java.starhotel.dao.MenuItemDaosqllmpl;
 import com.java.starhotel.model.MenuItem;
 
 public class Main {
@@ -26,10 +30,12 @@ public class Main {
 					"total : to see the total yet", "delete : to delete an item from the cart", "exit : to go back"));
 
 	static List<String> actionsUserCart = new ArrayList<String>(Arrays.asList("add : to add an item to the cart",
-			"see : to see the items in the cart", "delete : to delete an item from the cart", "exit : to go back"));
+			"total : to see the total yet", "see : to see the items in the cart", "delete : to delete an item from the cart", "exit : to go back"));
 
-	static CartDaoCollectionlmpl cartDao = new CartDaoCollectionlmpl();
-	static MenuItemDaoCollectionlmpl menuItem = new MenuItemDaoCollectionlmpl();
+//		static CartDaoCollectionlmpl cartDao = new CartDaoCollectionlmpl();
+//		static MenuItemDaoCollectionlmpl menuItem = new MenuItemDaoCollectionlmpl();
+	static CartDaoSqllmpl cartDao = new CartDaoSqllmpl();
+	static MenuItemDaosqllmpl menuItem = new MenuItemDaosqllmpl();
 
 	static Scanner scan = new Scanner(System.in);
 
@@ -83,12 +89,8 @@ public class Main {
 			switch (key) {
 			case 0: {
 				System.out.println("Tell the id you want to insert.");
-				List<MenuItem> list = menuItem.getMenuItemListCustomer();
 
-				for (MenuItem item : list) {
-					System.out.println(item.toString());
-				}
-
+				seeMenu();
 				key = scan.nextInt();
 				cartDao.addCartItem(userId, key);
 				break;
@@ -141,7 +143,23 @@ public class Main {
 	}
 
 	public static void editAdminMenu(int userId) {
-		showCommands(actionsAdminMenu);
+		Integer key;
+		String command = "";
+
+		while (true) {
+			showCommands(actionsAdminMenu);
+
+			key = scan.nextInt();
+
+			switch (key) {
+			case 0: {
+				seeMenu();
+				break;
+			}
+			default:
+				return;
+			}
+		}
 	}
 
 	public static void hotelAdmin() {
@@ -163,7 +181,9 @@ public class Main {
 				System.out.println("0 : Enter into menu.");
 				System.out.println("1 : Enter into cart.");
 				System.out.println("2 : Leave.");
+
 				key = scan.nextInt();
+
 				switch (key) {
 				case 0: {
 					editAdminMenu(userId);
@@ -186,7 +206,15 @@ public class Main {
 		}
 	}
 
-	public static void hotelHall() {
+	public static void seeMenu() {
+		List<MenuItem> list = menuItem.getMenuItemListCustomer();
+
+		for (MenuItem item : list) {
+			System.out.println(item.toString());
+		}
+	}
+
+	public static void hotelUser() {
 		Integer key;
 
 		while (true) {
@@ -208,11 +236,7 @@ public class Main {
 				key = scan.nextInt();
 				switch (key) {
 				case 0: {
-					List<MenuItem> list = menuItem.getMenuItemListCustomer();
-					
-					for(MenuItem item : list) {
-						System.out.println(item.toString());
-					}
+					seeMenu();
 					break;
 				}
 				case 1: {
@@ -231,7 +255,28 @@ public class Main {
 			}
 		}
 	}
-	
+
+	public static void hotelHall() {
+
+		while (true) {
+			msgEnterAs();
+			int value = scan.nextInt();
+
+			switch (value) {
+			case 0: {
+				hotelAdmin();
+				break;
+			}
+
+			case 1: {
+				hotelUser();
+				break;
+			}
+			default:
+				return;
+			}
+		}
+	}
 
 	public static void main(String[] args) {
 		System.out.println("============= Welcome do Start Hotel  ====================================");
