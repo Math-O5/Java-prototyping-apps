@@ -8,12 +8,22 @@ public class CartDaoSqllmpl implements CartDao {
 
 	@Override
 	public void addCartItem(int userId, int meuItemId) {
-		// TODO Auto-generated method stub
+		
+		// get Menu Item
+		// get price
+		
+		// Check if item already exist
+		String sqlItemInf = "SELECT * FROM cart WHERE userId=? AND menuItemId=?";
+		
+		// 
+		String sqlAddItem = "INSERT INTO cart () "
+				+ "VALUES(?, ?, ?, ?)";
 		
 	}
 
 	@Override
 	public List<MenuItem> getAllCartItems(int userId) throws CartEmptyException {
+		String sqlGetCart = "SELECT * FROM cart WHERE userId=?";
 		// TODO Auto-generated method stub
 		return null;
 	}

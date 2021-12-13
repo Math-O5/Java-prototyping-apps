@@ -13,18 +13,22 @@ import java.util.List;
 public class MenuItemDaoCollectionlmpl implements MenuItemDao {
 	private static List<MenuItem> menuItemList = null;
 	
-	public  MenuItemDaoCollectionlmpl() throws ParseException {
+	public  MenuItemDaoCollectionlmpl() {
 		if(menuItemList == null) {
 			menuItemList = new ArrayList<MenuItem>();
 			
 			Date today = new Date();
 			Date tomorrow = new Date(today.getTime() + (1000 * 60 * 60 * 24));
 			
-			menuItemList.add(new MenuItem(0, "Sandwich", 99, true, DateUtil.convertToDate("15/03/2017"), "Main Course", true));
-			menuItemList.add(new MenuItem(1, "Burger", 129, true, tomorrow, "Main Course", false));
-			menuItemList.add(new MenuItem(2, "Pizza", 149, true, DateUtil.convertToDate("21/08/2018"), "Main Course", false));
-			menuItemList.add(new MenuItem(3, "French Fries", 57, true, DateUtil.convertToDate("02/07/2017"), "Starters", true));
-			menuItemList.add(new MenuItem(4, "Chocolate Brownie", 32, true,  tomorrow, "Dessert", true));
+			try {
+				menuItemList.add(new MenuItem(0, "Sandwich", 99, true, DateUtil.convertToDate("15/03/2017"), "Main Course", true));
+				menuItemList.add(new MenuItem(1, "Burger", 129, true, tomorrow, "Main Course", false));
+				menuItemList.add(new MenuItem(2, "Pizza", 149, true, DateUtil.convertToDate("21/08/2018"), "Main Course", false));
+				menuItemList.add(new MenuItem(3, "French Fries", 57, true, DateUtil.convertToDate("02/07/2017"), "Starters", true));
+				menuItemList.add(new MenuItem(4, "Chocolate Brownie", 32, true,  tomorrow, "Dessert", true));				
+			} catch(ParseException e) {
+				System.out.println("Couldn't not load the menu due the data especification, please add it manually.");
+			}
 		}
 	}
 	

@@ -11,15 +11,16 @@ import com.java.starhotel.model.MenuItem;
 
 public class CartDaoCollectionlmpl implements CartDao {
 	/**
-	 * This class manages the data related to Cart of all users of star-hotel application.
+	 * This class manages the data related to Cart of all users of star-hotel
+	 * application.
 	 */
 	private static HashMap<Integer, Cart> userCarts;
-	
-	public void CartdaoCollectionlmpl() {
-		if(userCarts == null)
-			userCarts = new HashMap<Integer, Cart>();			
+
+	public CartDaoCollectionlmpl() {
+		if (userCarts == null)
+			userCarts = new HashMap<Integer, Cart>();
 	}
-	
+
 	/**
 	 * 
 	 * @return new Cart object empty.
@@ -28,92 +29,105 @@ public class CartDaoCollectionlmpl implements CartDao {
 		List<MenuItem> menuItemList = new ArrayList<MenuItem>();
 		return new Cart(menuItemList, 0);
 	}
-	
+
 	@Override
 	public void addCartItem(int userId, int menuItemId) {
-		Cart cart = userCarts.get(userId);			
+		Cart cart = null;
 		MenuItemDaoCollectionlmpl menuItemDao;
-		try {
-			menuItemDao = new MenuItemDaoCollectionlmpl();
-			if(cart == null)
-				cart = createCart();
-			
-			for(MenuItem menuItem : menuItemDao.getMenuItemListCustomer()) {
-				if(menuItem.getId() == menuItemId) {
-					updateCart(cart, menuItemId);	
-					System.out.println("Item " + menuItemId + " added to the cart user " + userId);		
-					return;
-				}
-			}
-		} catch (ParseException e) {
-			e.printStackTrace();
+
+		if (!userCarts.containsKey(userId)) {
+			cart = createCart();
+			userCarts.put(userId, cart);
+		} else {
+			cart = userCarts.get(userId);
 		}
-				
+
+		menuItemDao = new MenuItemDaoCollectionlmpl();
+		for (MenuItem menuItem : menuItemDao.getMenuItemListCustomer()) {
+			if (menuItem.getId() == menuItemId) {
+				updateCart(cart, menuItemId);
+				System.out.println("Item " + menuItemId + " added to the cart user " + userId);
+				return;
+			}
+		}
+
 		System.out.println("Item not available");
 	}
-	
 
 	@Override
 	public List<MenuItem> getAllCartItems(int userId) throws CartEmptyException {
-		Cart cart = userCarts.get(userId);
-		
+		Cart cart = null;
+
+		if (!userCarts.containsKey(userId)) {
+			cart = createCart();
+			userCarts.put(userId, cart);
+		} else {
+			cart = userCarts.get(userId);
+		}
+
 		List<MenuItem> menuItemList = cart.getMenuItemList();
-		
-		if(menuItemList.isEmpty())
+
+		if (menuItemList.isEmpty())
 			throw new CartEmptyException();
-		
+
 		updateTotalCartPrice(cart, menuItemList);
-		
+
 		return menuItemList;
 	}
-	
 
 	@Override
 	public void removeCartItem(int userId, int menuItemId) {
-		Cart cart = userCarts.get(userId);			
-		
-		if(cart == null)
+		Cart cart = userCarts.get(userId);
+
+		if (cart == null)
 			return;
-		
+
 		List<MenuItem> menuList = cart.getMenuItemList();
-		
+
 		Iterator<MenuItem> itr = menuList.iterator();
 		do {
-			if(itr.next().getId() == menuItemId) {
+			if (itr.next().getId() == menuItemId) {
 				itr.remove();
-				System.out.println("Item " + menuItemId + " removed from the cart user " + userId);		
+				System.out.println("Item " + menuItemId + " removed from the cart user " + userId);
 				break;
 			}
-		} while(itr.hasNext());
-		
+		} while (itr.hasNext());
+
 	}
-	
+
 	private void addItemToCart(Cart cart, MenuItem item) {
 		List<MenuItem> menuItemList = cart.getMenuItemList();
 		menuItemList.add(item);
 		double total = cart.getTotal() + item.getPrice();
 		cart.setTotal(total);
 	}
-	
+
 	private void updateCart(Cart cart, int menuItemId) {
 		MenuItem menuItem = null;
-		
-		try {
-			MenuItemDaoCollectionlmpl menuItemDao = new MenuItemDaoCollectionlmpl();
-			menuItem = menuItemDao.getMenuItem(menuItemId);
-			addItemToCart(cart, menuItem);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+
+		MenuItemDaoCollectionlmpl menuItemDao = new MenuItemDaoCollectionlmpl();
+		menuItem = menuItemDao.getMenuItem(menuItemId);
+		addItemToCart(cart, menuItem);
+
 	}
-	
+
 	private void updateTotalCartPrice(Cart cart, List<MenuItem> menuItemList) {
 		double total = 0;
 
-		for(MenuItem item : menuItemList) {
+		for (MenuItem item : menuItemList) {
 			total += item.getPrice();
 		}
-		
+
 		cart.setTotal(total);
+	}
+	
+	public double getTotal(int userId) throws CartEmptyException {
+		Cart cart = userCarts.get(userId);
+		
+		if(cart == null) {
+			userCarts.put(userId, createCart());
+			throw new CartEmptyException();
+		}
+		return cart.getTotal();
 	}
 }
